@@ -1,10 +1,13 @@
 {
   "name": "markpane",
-  "version": "0.0.0",
+  "version": "0.0.0-alpha",
   "description": "Multi-panel Markdown document parser (*.mdp format)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "markpane": "bin/cli.js"
   },
   "repository": {
     "type": "git",
