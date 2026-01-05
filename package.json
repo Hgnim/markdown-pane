@@ -1,0 +1,27 @@
+{
+  "name": "markpane",
+  "version": "0.0.0",
+  "description": "Multi-panel Markdown document parser (*.mdp format)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hgnim/markdown-pane.git"
+  },
+  "keywords": [
+    "markdown",
+    "multi-panel",
+    "mdp"
+  ],
+  "author": "Hgnim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Hgnim/markdown-pane/issues"
+  },
+  "homepage": "https://github.com/Hgnim/markdown-pane#readme",
+  "dependencies": {
+    "marked": "^17.0.1"
+  }
+}
