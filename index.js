@@ -15,13 +15,15 @@ const MdpJsonDefault = {
 /**
  * 解析.mdp文本内容为html字符串
  * @param {string} content 内容
+ * @param {boolean} haveOuter 输出是否被一个div所包裹。默认为true
  * @return {string} 返回html内容
  */
-export function parse(content){
+export function parse(content, haveOuter=true){
     const parJson=parseJson(content);
     let result='';
     parJson.panes.forEach(pane => {
         const styles = [];
+        let haveStyle = false;
         {
             let hasAbso = false;
             function addAbso() {
@@ -33,24 +35,34 @@ export function parse(content){
             if (pane.x != undefined && pane.x != null) {
                 styles.push(`left:${pane.x}px;`);
                 addAbso();
+                haveStyle = true;
             }
             if (pane.y != undefined && pane.y != null) {
                 styles.push(`top:${pane.y}px;`);
                 addAbso();
+                haveStyle = true;
             }
         }
-        if (pane.width!=undefined&&pane.width!=null)
+        if (pane.width != undefined && pane.width != null) {
             styles.push(`width:${pane.width}px;`);
-        if (pane.height!=undefined&&pane.height!=null)
+        }
+        if (pane.height != undefined && pane.height != null) {
             styles.push(`height:${pane.height}px;`);
-        if (pane.zIndex!=undefined&&pane.zIndex!=null)
+            haveStyle = true;
+        }
+        if (pane.zIndex != undefined && pane.zIndex != null) {
             styles.push(`z-index:${pane.zIndex};`);
-        const style=(()=>{
-            let stys='';
-            styles.forEach(s=>{
-                stys+=s;
-            });
-            return ` style="${stys}"`;
+            haveStyle = true;
+        }
+        const style = (() => {
+            if (haveStyle) {
+                let stys = '';
+                styles.forEach(s => {
+                    stys += s;
+                });
+                return ` style="${stys}"`;
+            } else
+                return '';
         })();
         const id=(()=>{
             if (pane.id!=undefined&&pane.id!=null)
@@ -72,7 +84,10 @@ export function parse(content){
 
         result+=`<div${id}${classList}${style}>\n${pane.html}</div>\n`;
     });
-    return result;
+    if (haveOuter)
+        return `<div style="position:relative;overflow:scroll;width:100%;height:100%;">\n${result}\n</div>`;
+    else
+        return result;
 }
 /**
  * 解析.mdp文本内容为结构化数据
@@ -87,8 +102,9 @@ export function parseJson(content) {
     let pane = null;
     //markdown内容
     let mdContent = [];
-    function savePane(){
-        pane.markdown = mdContent.join('\n').trim();
+    let mdOtherContent = [];
+    function savePane(mdContent_){
+        pane.markdown = mdContent_.join('\n').trim();
         pane.html = marked.parse(pane.markdown);
         result.panes.push(structuredClone(pane)/*深拷贝*/);
         pane=null;
@@ -98,7 +114,7 @@ export function parseJson(content) {
 
         if (lineTrim.startsWith('---')) {
             if (pane) {//面板结束，保存
-                savePane();
+                savePane(mdContent);
             }
             else {//开始面板
                 pane = parseHeader(lineTrim.slice(3).trim());
@@ -107,11 +123,16 @@ export function parseJson(content) {
             continue;
         }
 
-        mdContent.push(line);
+        if (pane)
+            mdContent.push(line);
+        else
+            mdOtherContent.push(line);
     }
     if (pane) {//如果还有数据则最后保存
-        savePane();
+        savePane(mdContent);
     }
+    pane = structuredClone(MdpJsonDefault);
+    savePane(mdOtherContent);
 
     return result;
 }
