@@ -21,18 +21,29 @@ export function parse(content){
     const parJson=parseJson(content);
     let result='';
     parJson.panes.forEach(pane => {
-        const styles=[];
-        if (pane.x||pane.y)
-            styles.push('position:absolute;');
-        if (pane.x)
-            styles.push(`left:${pane.x}px;`);
-        if (pane.y)
-            styles.push(`top:${pane.y}px;`);
-        if (pane.width)
+        const styles = [];
+        {
+            let hasAbso = false;
+            function addAbso() {
+                if (!hasAbso) {
+                    styles.push('position:absolute;');
+                    hasAbso = true;
+                }
+            }
+            if (pane.x != undefined && pane.x != null) {
+                styles.push(`left:${pane.x}px;`);
+                addAbso();
+            }
+            if (pane.y != undefined && pane.y != null) {
+                styles.push(`top:${pane.y}px;`);
+                addAbso();
+            }
+        }
+        if (pane.width!=undefined&&pane.width!=null)
             styles.push(`width:${pane.width}px;`);
-        if (pane.height)
+        if (pane.height!=undefined&&pane.height!=null)
             styles.push(`height:${pane.height}px;`);
-        if (pane.zIndex)
+        if (pane.zIndex!=undefined&&pane.zIndex!=null)
             styles.push(`z-index:${pane.zIndex};`);
         const style=(()=>{
             let stys='';
@@ -42,7 +53,7 @@ export function parse(content){
             return ` style="${stys}"`;
         })();
         const id=(()=>{
-            if (pane.id)
+            if (pane.id!=undefined&&pane.id!=null)
                 return ` id="${pane.id}"`;
             else
                 return '';
@@ -79,7 +90,7 @@ export function parseJson(content) {
     function savePane(){
         pane.markdown = mdContent.join('\n').trim();
         pane.html = marked.parse(pane.markdown);
-        result.panes.push(JSON.parse(JSON.stringify(pane)/*深拷贝*/));
+        result.panes.push(structuredClone(pane)/*深拷贝*/);
         pane=null;
     }
     for (const line of lines) {
@@ -110,7 +121,7 @@ export function parseJson(content) {
  * @param {string} argsStr 参数字符串
  */
 function parseHeader(argsStr) {
-    const result = MdpJsonDefault;
+    const result = structuredClone(MdpJsonDefault/*深拷贝默认值，避免更改默认值*/);
     {
         const ast=argsStr.trim();
         if (!ast || ast==='') return result;
@@ -132,28 +143,28 @@ function parseHeader(argsStr) {
 
             switch (key) {
                 case 'x':
-                    result.x = parseInt(valueProced) || MdpJsonDefault.x;
+                    result.x = parseInt(valueProced) ?? MdpJsonDefault.x;
                     break;
                 case 'y':
-                    result.y = parseInt(valueProced) || MdpJsonDefault.y;
+                    result.y = parseInt(valueProced) ?? MdpJsonDefault.y;
                     break;
                 case 'w':
                 case 'width':
-                    result.width = parseInt(valueProced) || MdpJsonDefault.width;
+                    result.width = parseInt(valueProced) ?? MdpJsonDefault.width;
                     break;
                 case 'h':
                 case 'height':
-                    result.height = parseInt(valueProced) || MdpJsonDefault.height;
+                    result.height = parseInt(valueProced) ?? MdpJsonDefault.height;
                     break;
                 case 'z':
                 case 'z-index':
-                    result.zIndex = parseInt(valueProced) || MdpJsonDefault.zIndex;
+                    result.zIndex = parseInt(valueProced) ?? MdpJsonDefault.zIndex;
                     break;
                 case 'id':
-                    result.id = valueProced || MdpJsonDefault.id;
+                    result.id = valueProced ?? MdpJsonDefault.id;
                     break;
                 case 'class':
-                    result.class = valueProced.split(/\s+/).filter(Boolean) || MdpJsonDefault.class;
+                    result.class = valueProced.split(/\s+/).filter(Boolean) ?? MdpJsonDefault.class;
                     break;
             }
         }
@@ -163,25 +174,25 @@ function parseHeader(argsStr) {
         for(let index=0;index<args.length;index++){
             switch (index){
                 case 0:
-                    result.x = parseInt(args[index]) || MdpJsonDefault.x;
+                    result.x = parseInt(args[index]) ?? MdpJsonDefault.x;
                     break;
                 case 1:
-                    result.y = parseInt(args[index]) || MdpJsonDefault.y;
+                    result.y = parseInt(args[index]) ?? MdpJsonDefault.y;
                     break;
                 case 2:
-                    result.width = parseInt(args[index]) || MdpJsonDefault.width;
+                    result.width = parseInt(args[index]) ?? MdpJsonDefault.width;
                     break;
                 case 3:
-                    result.height = parseInt(args[index]) || MdpJsonDefault.height;
+                    result.height = parseInt(args[index]) ?? MdpJsonDefault.height;
                     break;
                 case 4:
-                    result.zIndex = parseInt(args[index]) || MdpJsonDefault.zIndex;
+                    result.zIndex = parseInt(args[index]) ?? MdpJsonDefault.zIndex;
                     break;
                 case 5: {
                     const idAndClass = args.slice(index);
                     for (let i = 0; i < idAndClass.length; i++) {
                         if (i === 0)
-                            result.id = idAndClass[0] || MdpJsonDefault.id;
+                            result.id = idAndClass[0] ?? MdpJsonDefault.id;
                         else if (idAndClass[i])
                             result.class.push(idAndClass[i]);
                     }
