@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const { parse,parseJson } = require('../index');
-const path = require('path');
+import fs from 'fs';
+import { parse, parseJson } from '../index.js';
+import path from 'path';
 
 const [, , command, filePath] = process.argv;
 
