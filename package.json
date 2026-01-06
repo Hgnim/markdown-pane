@@ -4,12 +4,16 @@
   "description": "Multi-panel Markdown document parser (*.mdp format)",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.js",
+  "browser": "dist/markpane.umd.min.js",
+  "unpkg": "dist/markpane.umd.min.js",
+  "jsdelivr": "dist/markpane.umd.min.js",
+  "bin": {
+    "markpane": "dist/bin/cli.js"
+  },
   "scripts": {
     "build": "node script/build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": {
-    "markpane": "dist/bin/cli.js"
   },
   "files": [
     "dist/",
@@ -35,6 +39,8 @@
     "marked": "^17.0.1"
   },
   "devDependencies": {
-    "terser": "^5.44.1"
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.55.1"
   }
 }

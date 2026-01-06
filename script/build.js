@@ -1,10 +1,11 @@
 import fs from 'fs';
-import { minify } from 'terser';
+import { rollup } from 'rollup';
+import rollupConfig from '../rollup.config.js';
 
 //const args = process.argv.slice(2);
 
 try {
-    console.log('开始构建……');
+    console.log('开始构建：');
 
     while (true) {
         if (!fs.existsSync('dist')) {
@@ -14,28 +15,25 @@ try {
             fs.rmSync('dist', { recursive: true, force: true });
         }
     }
-    fs.copyFileSync('src/index.js', 'dist/index.js');
+
+    console.log('复制文件中……');
 
     if (!fs.existsSync('dist/bin')) {
         fs.mkdirSync('dist/bin', { recursive: true });
     }
-    fs.copyFileSync('src/cli.js', 'dist/bin/cli.js');
+    fs.copyFileSync('src/cli/cli.js', 'dist/bin/cli.js');
 
+    console.log('完成。');
 
-    console.log('压缩文件中……');
+    console.log('构建文件中……');
 
-    {
-        const minified = await minify(fs.readFileSync('src/index.js', 'utf8'), {
-            compress: {
-                drop_console: false,
-                drop_debugger: true
-            },
-            mangle: {
-                toplevel: true
-            }
-        });
-        fs.writeFileSync('dist/index.min.js', minified.code);
+    for(const config of rollupConfig){
+        const bundle = await rollup(config);
+        await bundle.write(config.output);
+        await bundle.close();
     }
+
+    console.log('完成。');
 
     console.log('构建完成。');
 } catch (err) {
