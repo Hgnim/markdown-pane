@@ -13,7 +13,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
+      #禁用OIDC认证，因为经使用发现其无法正常工作
+#      id-token: write
 
     strategy:
       matrix:
@@ -40,8 +41,14 @@ jobs:
 #      run: |
 #        cp CNAME dist/
 
-    - name: Publish to npm via Trusted Publisher (OpenID Connect)
+    #禁用OIDC认证，因为经使用发现其无法正常工作
+#    - name: Publish to npm via Trusted Publisher (OpenID Connect)
+#      run: npm publish
+
+    - name: Publish to npm
       run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
