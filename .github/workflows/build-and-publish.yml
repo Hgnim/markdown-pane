@@ -6,7 +6,7 @@ on:
     types: [published]
 
 jobs:
-  build:
+  buildAndPublish:
 
     runs-on: ubuntu-latest
 
