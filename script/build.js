@@ -18,6 +18,8 @@ try {
 
     console.log('复制文件中……');
 
+    fs.copyFileSync('src/types.d.ts', 'dist/types.d.ts');
+
     if (!fs.existsSync('dist/bin')) {
         fs.mkdirSync('dist/bin', { recursive: true });
     }

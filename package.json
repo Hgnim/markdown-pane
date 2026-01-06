@@ -1,10 +1,11 @@
 {
   "name": "markpane",
-  "version": "0.2.0-alpha",
+  "version": "0.3.0-alpha",
   "description": "Multi-panel Markdown document parser (*.mdp format)",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "types": "dist/types.d.ts",
   "browser": "dist/markpane.umd.min.js",
   "unpkg": "dist/markpane.umd.min.js",
   "jsdelivr": "dist/markpane.umd.min.js",
