@@ -18,8 +18,8 @@ const MdpJsonDefault = {
  * @param {boolean} haveOuter 输出是否被一个div所包裹。默认为true
  * @return {string} 返回html内容
  */
-export function parse(content, haveOuter=true){
-    const parJson=parseJson(content);
+export function parseMdp(content, haveOuter=true){
+    const parJson=parseMdpJson(content);
     let result='';
     parJson.panes.forEach(pane => {
         const styles = [];
@@ -94,7 +94,7 @@ export function parse(content, haveOuter=true){
  * @param {string} content 内容
  * @returns {object} 返回json数据
  */
-export function parseJson(content) {
+export function parseMdpJson(content) {
     const result = { panes: [] };
     const lines = content.split('\n');
 
@@ -224,3 +224,14 @@ function parseHeader(argsStr) {
     }
     return result;
 }
+
+export const markpane = {
+    parse: (content, haveOuter = true) => {
+        return parseMdp(content, haveOuter);
+    },
+    parseJson: (content) => {
+        return parseMdpJson(content);
+    },
+}
+
+export default markpane;

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import fs from 'fs';
-import { parse, parseJson } from '../index.js';
+import markpane from '../index.js';
 import path from 'path';
 
 const [, , command, filePath] = process.argv;
@@ -25,8 +25,8 @@ function doParse(filePath,isJson) {
 
     const content = fs.readFileSync(path.resolve(filePath), 'utf8');
 
-    if (isJson) console.log(JSON.stringify(parseJson(content), null, 2));
-    else console.log(parse(content));
+    if (isJson) console.log(JSON.stringify(markpane.parseJson(content), null, 2));
+    else console.log(markpane.parse(content));
 }
 
 switch (command) {
