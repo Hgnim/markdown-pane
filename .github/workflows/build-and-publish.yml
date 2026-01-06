@@ -37,10 +37,6 @@ jobs:
     - name: Build
       run: npm run build
 
-#    - name: Copy some files to the dist folder
-#      run: |
-#        cp CNAME dist/
-
     #禁用OIDC认证，因为经使用发现其无法正常工作
 #    - name: Publish to npm via Trusted Publisher (OpenID Connect)
 #      run: npm publish
@@ -49,6 +45,11 @@ jobs:
       run: npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Copy some files to the dist folder
+      run: |
+        cp LICENSE dist/
+        cp README.md dist/
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
