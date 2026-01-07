@@ -108,25 +108,25 @@ Please report this to https://github.com/markedjs/marked.`,e){let r="<p>An error
                         hasAbso = true;
                     }
                 }
-                if (pane.x != undefined && pane.x != null) {
+                if (pane.x !== undefined) {
                     styles.push(`left:${pane.x}px;`);
                     addAbso();
                     haveStyle = true;
                 }
-                if (pane.y != undefined && pane.y != null) {
+                if (pane.y !== undefined) {
                     styles.push(`top:${pane.y}px;`);
                     addAbso();
                     haveStyle = true;
                 }
             }
-            if (pane.width != undefined && pane.width != null) {
+            if (pane.width !== undefined) {
                 styles.push(`width:${pane.width}px;`);
             }
-            if (pane.height != undefined && pane.height != null) {
+            if (pane.height !== undefined) {
                 styles.push(`height:${pane.height}px;`);
                 haveStyle = true;
             }
-            if (pane.zIndex != undefined && pane.zIndex != null) {
+            if (pane.zIndex !== undefined) {
                 styles.push(`z-index:${pane.zIndex};`);
                 haveStyle = true;
             }
@@ -141,7 +141,7 @@ Please report this to https://github.com/markedjs/marked.`,e){let r="<p>An error
                     return '';
             })();
             const id=(()=>{
-                if (pane.id!=undefined&&pane.id!=null)
+                if (pane.id!==undefined)
                     return ` id="${pane.id}"`;
                 else
                     return '';
