@@ -17,7 +17,7 @@
 ## 演示
 
 [演示页面](https://hgnim.github.io/markdown-pane/)\
-[转换工具](https://litoolhub.hgnim.mjyy.top/#/tool/markdownpane)
+[预览工具](https://litoolhub.hgnim.mjyy.top/#/tool/markdownpane)
 
 ## 使用
 

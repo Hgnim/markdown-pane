@@ -20,7 +20,7 @@ Use Scenario:
 ## Demo
 
  [Demo Page](https://hgnim.github.io/markdown-pane/)\
- [Conversion Tools](https://litoolhub.hgnim.mjyy.top/#/tool/markdownpane)
+ [Preview Tool](https://litoolhub.hgnim.mjyy.top/#/tool/markdownpane)
 
 ## Use
 

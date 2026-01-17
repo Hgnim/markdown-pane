@@ -2,23 +2,29 @@ import {marked} from "marked";
 
 //默认值
 const MdpJsonDefault = {
-    x: null,
-    y: null,
-    width: null,
-    height: null,
-    zIndex: null,
-    id: null,
-    class: [],
-    markdown: '',
-    html: '',
+    panes: [
+        {
+            x: null,
+            y: null,
+            width: null,
+            height: null,
+            zIndex: null,
+            position: 'relative',
+            id: null,
+            class: [],
+            markdown: '',
+            html: '',
+        }
+    ],
 };
 /**
  * 解析.mdp文本内容为html字符串
  * @param {string} content 内容
  * @param {boolean} haveOuter 输出是否被一个div所包裹。默认为true
+ * @param {string[]} defaultClass 每个Pane的默认class列表。默认为空列表
  * @return {string} 返回html内容
  */
-export function parseMdp(content, haveOuter=true){
+export function parseMdp(content, haveOuter = true, defaultClass=[]){
     const parJson=parseMdpJson(content);
     let result='';
     parJson.panes.forEach(pane => {
@@ -131,7 +137,7 @@ export function parseMdpJson(content) {
     if (pane) {//如果还有数据则最后保存
         savePane(mdContent);
     }
-    pane = structuredClone(MdpJsonDefault);
+    pane = structuredClone(MdpJsonDefault.panes[0]);
     savePane(mdOtherContent);
 
     return result;
@@ -142,7 +148,7 @@ export function parseMdpJson(content) {
  * @param {string} argsStr 参数字符串
  */
 function parseHeader(argsStr) {
-    const result = structuredClone(MdpJsonDefault/*深拷贝默认值，避免更改默认值*/);
+    const result = structuredClone(MdpJsonDefault.panes[0]/*深拷贝默认值，避免更改默认值*/);
     {
         const ast=argsStr.trim();
         if (!ast || ast==='') return result;
@@ -164,28 +170,28 @@ function parseHeader(argsStr) {
 
             switch (key) {
                 case 'x':
-                    result.x = parseInt(valueProced) ?? MdpJsonDefault.x;
+                    result.x = parseInt(valueProced) ?? MdpJsonDefault.panes[0].x;
                     break;
                 case 'y':
-                    result.y = parseInt(valueProced) ?? MdpJsonDefault.y;
+                    result.y = parseInt(valueProced) ?? MdpJsonDefault.panes[0].y;
                     break;
                 case 'w':
                 case 'width':
-                    result.width = parseInt(valueProced) ?? MdpJsonDefault.width;
+                    result.width = parseInt(valueProced) ?? MdpJsonDefault.panes[0].width;
                     break;
                 case 'h':
                 case 'height':
-                    result.height = parseInt(valueProced) ?? MdpJsonDefault.height;
+                    result.height = parseInt(valueProced) ?? MdpJsonDefault.panes[0].height;
                     break;
                 case 'z':
                 case 'z-index':
-                    result.zIndex = parseInt(valueProced) ?? MdpJsonDefault.zIndex;
+                    result.zIndex = parseInt(valueProced) ?? MdpJsonDefault.panes[0].zIndex;
                     break;
                 case 'id':
-                    result.id = valueProced ?? MdpJsonDefault.id;
+                    result.id = valueProced ?? MdpJsonDefault.panes[0].id;
                     break;
                 case 'class':
-                    result.class = valueProced.split(/\s+/).filter(Boolean) ?? MdpJsonDefault.class;
+                    result.class = valueProced.split(/\s+/).filter(Boolean) ?? MdpJsonDefault.panes[0].class;
                     break;
             }
         }
@@ -195,25 +201,25 @@ function parseHeader(argsStr) {
         for(let index=0;index<args.length;index++){
             switch (index){
                 case 0:
-                    result.x = parseInt(args[index]) ?? MdpJsonDefault.x;
+                    result.x = parseInt(args[index]) ?? MdpJsonDefault.panes[0].x;
                     break;
                 case 1:
-                    result.y = parseInt(args[index]) ?? MdpJsonDefault.y;
+                    result.y = parseInt(args[index]) ?? MdpJsonDefault.panes[0].y;
                     break;
                 case 2:
-                    result.width = parseInt(args[index]) ?? MdpJsonDefault.width;
+                    result.width = parseInt(args[index]) ?? MdpJsonDefault.panes[0].width;
                     break;
                 case 3:
-                    result.height = parseInt(args[index]) ?? MdpJsonDefault.height;
+                    result.height = parseInt(args[index]) ?? MdpJsonDefault.panes[0].height;
                     break;
                 case 4:
-                    result.zIndex = parseInt(args[index]) ?? MdpJsonDefault.zIndex;
+                    result.zIndex = parseInt(args[index]) ?? MdpJsonDefault.panes[0].zIndex;
                     break;
                 case 5: {
                     const idAndClass = args.slice(index);
                     for (let i = 0; i < idAndClass.length; i++) {
                         if (i === 0)
-                            result.id = idAndClass[0] ?? MdpJsonDefault.id;
+                            result.id = idAndClass[0] ?? MdpJsonDefault.panes[0].id;
                         else if (idAndClass[i])
                             result.class.push(idAndClass[i]);
                     }
